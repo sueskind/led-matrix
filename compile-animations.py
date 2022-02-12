@@ -8,6 +8,7 @@ from PIL import Image
 from model import Frame, Animation, Settings
 
 ANIMATIONS_DIR = "animations"
+IGNORE_DIR = "_ignore"
 TARGET_FILE = "animations.ino"
 
 SETTINGS_FILE = "settings.json"
@@ -43,7 +44,7 @@ def load_animations():
 
     animations = []
 
-    for i, animation_name in enumerate(sorted(os.listdir(ANIMATIONS_DIR))):
+    for i, animation_name in enumerate(filter(lambda f: f != IGNORE_DIR, sorted(os.listdir(ANIMATIONS_DIR)))):
         animation_dir = join(ANIMATIONS_DIR, animation_name)
 
         frames = []
