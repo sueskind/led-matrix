@@ -15,20 +15,32 @@ IMAGE_FILE_EXTS = (".png",)
 
 
 def _transform(img: Image):
-    arr = np.asarray(img)[:, :, :3]  # slice away transparency
-    arr = arr.reshape((-1, 3))  # flatten
+    """
+    Performs transformations to the image, like flattening, reordering, quantization etc.
 
+    :param img: An RGB(A) Image object (8-bit per channel)
+    :return: Flat list of pixel values
+    """
+
+    # slice away transparency
+    arr = np.asarray(img)[:, :, :3]
+
+    # flatten
+    arr = arr.reshape((-1, 3))
+
+    # quantize 24-bit RGB to 8-bit (3-red, 3-green, 2-blue)
     #                      target ranges              previous range
     quantized_arr = arr * [2 ** 3, 2 ** 3, 2 ** 2] // 2 ** 8
 
-    triples = []
-    for triple in quantized_arr:
-        triples.append(str(np.sum(triple * [2 ** 5, 2 ** 2, 1])))
+    # store as single byte in decimal integer representation
+    pixels = [str(np.sum(rgb * [2 ** 5, 2 ** 2, 1])) for rgb in quantized_arr]
 
-    return triples
+    return pixels
 
 
 def load_animations():
+    """Load all animations from the animations folder."""
+
     animations = []
 
     for i, animation_name in enumerate(sorted(os.listdir(ANIMATIONS_DIR))):
@@ -50,6 +62,8 @@ def load_animations():
 
 
 def compile_animations(animations):
+    """Render the template for the animations.ino file."""
+
     template = jinja2.Environment(loader=jinja2.FileSystemLoader(".")).get_template("animations.ino.template")
     output = template.render(animations=animations,
                              frameCounts=[len(anim.frames) for anim in animations],
