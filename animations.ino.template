@@ -1,0 +1,15 @@
+#define ANIMATIONS {{ animations|length }}
+
+byte frameCounts[ANIMATIONS] = { {{ frameCounts|join(', ') }} };
+byte speeds[ANIMATIONS] = { {{ speeds|join(', ') }} };
+
+{% for animation in animations %}
+// {{ animation.name }}
+uint8_t animation{{ animation.id }}[{{ animation.frames|length }}][NUM_LEDS] = {
+{% for frame in animation.frames -%}
+{ {{ frame.pixels|join(', ') }} }{{ ", " if not loop.last else "" }}
+{% endfor -%}
+};
+{% endfor %}
+
+void *animations[ANIMATIONS] = { {% for animation in animations %}&animation{{ animation.id }}{{ ", " if not loop.last else "" }}{% endfor %} };
