@@ -19,15 +19,17 @@ void loop() {
   uint8_t r, g, b;
   for (uint8_t i = 0; i < NUM_LEDS; i++){
 
+    // get correct pixel
+    rgb8bit = *((uint8_t*)animations[animation] + frame * NUM_LEDS + i);
+
     // parse colors from 8-bit to 24-bit RGB
-    rgb8bit = *((uint8_t*)animations[animation] + frame * NUM_LEDS);
     r = (rgb8bit >> 5) * 32;
     g = ((rgb8bit >> 2) % 32) * 32;
     b = (rgb8bit % 4) * 64;
 
     leds[i].setRGB(r, g, b);
   }
-  
+
   FastLED.show();
 
   delay(speeds[animation]);
