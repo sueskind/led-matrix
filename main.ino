@@ -23,9 +23,9 @@ void loop() {
     rgb8bit = *((uint8_t*)animations[animation] + frame * NUM_LEDS + i);
 
     // parse colors from 8-bit to 24-bit RGB
-    r = (rgb8bit >> 5) * 32;
-    g = ((rgb8bit >> 2) % 32) * 32;
-    b = (rgb8bit % 4) * 64;
+    r =  rgb8bit & 0b11100000;
+    g = (rgb8bit & 0b00011100) << 3;
+    b = (rgb8bit & 0b00000011) << 6;
 
     leds[i].setRGB(r, g, b);
   }
