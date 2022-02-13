@@ -1,7 +1,7 @@
 #define ANIMATIONS {{ animations|length }}
 
 uint8_t frameCounts[ANIMATIONS] = { {{ frameCounts|join(', ') }} };
-uint16_t speeds[ANIMATIONS] = { {{ speeds|join(', ') }} };
+uint32_t speeds[ANIMATIONS] = { {{ speeds|join(', ') }} };
 
 {% for animation in animations %}
 // {{ animation.name }}
