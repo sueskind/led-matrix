@@ -14,6 +14,8 @@ TARGET_FILE = "animations.ino"
 SETTINGS_FILE = "settings.json"
 IMAGE_FILE_EXTS = (".png",)
 
+COLUMNS = 11
+
 
 def _transform(img: Image):
     """
@@ -25,6 +27,11 @@ def _transform(img: Image):
 
     # slice away transparency
     arr = np.asarray(img)[:, :, :3]
+
+    # rotate 90°
+    arr = np.rot90(arr, k=3)
+    # snake-wise LED layout
+    arr[1::2] = arr[1::2, ::-1]
 
     # flatten
     arr = arr.reshape((-1, 3))
